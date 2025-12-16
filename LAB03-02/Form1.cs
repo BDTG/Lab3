@@ -37,9 +37,11 @@ namespace LAB03_02
             this.Text = "Soạn thảo văn bản";
             this.Size = new Size(900, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.Font = new Font("Segoe UI", 10); // Cải thiện Font chữ
 
             // --- 2. Tạo MenuStrip (Menu Hệ thống) ---
             menuStrip = new MenuStrip();
+            menuStrip.Font = new Font("Segoe UI", 10);
             ToolStripMenuItem systemMenu = new ToolStripMenuItem("Hệ thống");
 
             // Các menu item con
@@ -59,6 +61,7 @@ namespace LAB03_02
 
             // --- 3. Tạo ToolStrip (Thanh công cụ định dạng) ---
             toolStrip = new ToolStrip();
+            toolStrip.Font = new Font("Segoe UI", 10);
 
             // Nút New/Save nhanh trên Toolbar
             btnNew = new ToolStripButton(SystemIcons.WinLogo.ToBitmap()); // Dùng icon tạm
@@ -138,12 +141,12 @@ namespace LAB03_02
                 cmbSizes.Items.Add(size);
             }
 
-            // 3. Giá trị mặc định: Tahoma, 14
-            cmbFonts.SelectedItem = "Tahoma";
+            // 3. Giá trị mặc định: Segoe UI, 14
+            cmbFonts.SelectedItem = "Segoe UI";
             cmbSizes.SelectedItem = 14;
 
             // Áp dụng font mặc định cho RichTextBox
-            ApplyFontToRichText("Tahoma", 14);
+            ApplyFontToRichText("Segoe UI", 14);
         }
 
         private void ApplyFontToRichText(string fontName, float size)

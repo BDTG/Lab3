@@ -34,9 +34,11 @@ namespace LAB03_01
             this.Text = "Chương trình Windows Media Player";
             this.Size = new Size(800, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.Font = new Font("Segoe UI", 10); // Cải thiện Font chữ
 
             // 2. Tạo MenuStrip (Thanh menu trên cùng)
             menuStrip = new MenuStrip();
+            menuStrip.Font = new Font("Segoe UI", 10); // Cải thiện Font menu
 
             // Menu File
             ToolStripMenuItem fileMenu = new ToolStripMenuItem("File");
@@ -57,6 +59,7 @@ namespace LAB03_01
 
             // 3. Tạo StatusStrip (Thanh trạng thái dưới cùng)
             statusStrip = new StatusStrip();
+            statusStrip.Font = new Font("Segoe UI", 9); // Font status nhỏ hơn chút
             lblStatus = new ToolStripStatusLabel();
             lblStatus.Text = "Ready";
             statusStrip.Items.Add(lblStatus);
