@@ -14,6 +14,10 @@ namespace LAB03_03
         private ToolStripTextBox txtSearch;
         private ToolStripButton btnStats;
 
+        private ToolStripStatusLabel lblMaleCount;
+        private ToolStripStatusLabel lblFemaleCount;
+        private StatusStrip statusStrip; // Thêm StatusStrip dưới cùng
+
         // Biến đếm số thứ tự
         private int sttCounter = 1;
 
@@ -28,9 +32,9 @@ namespace LAB03_03
         private void InitializeComponent()
         {
             this.Text = "Quản Lý Sinh Viên";
-            this.Size = new Size(1000, 600); // Tăng kích thước form
+            this.Size = new Size(1000, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Font = new Font("Segoe UI", 10); // Cải thiện Font chữ
+            this.Font = new Font("Segoe UI", 10);
 
             // --- 1. Tạo MenuStrip ---
             menuStrip = new MenuStrip();
@@ -51,7 +55,7 @@ namespace LAB03_03
             toolStrip.Font = new Font("Segoe UI", 10);
             lblSearch = new ToolStripLabel("Tìm kiếm tên:");
             txtSearch = new ToolStripTextBox();
-            txtSearch.Size = new Size(250, 25); // Tăng kích thước ô tìm kiếm
+            txtSearch.Size = new Size(250, 25);
             txtSearch.Font = new Font("Segoe UI", 10);
             txtSearch.TextChanged += TxtSearch_TextChanged;
 
@@ -68,7 +72,7 @@ namespace LAB03_03
             listView.FullRowSelect = true;
             listView.GridLines = true;
             listView.Font = new Font("Segoe UI", 10);
-            
+
             // --- CẬP NHẬT KÍCH THƯỚC CỘT CHO ĐẸP ---
             listView.Columns.Add("STT", 60);
             listView.Columns.Add("Mã SV", 120);
@@ -77,8 +81,19 @@ namespace LAB03_03
             listView.Columns.Add("Điểm TB", 100);
             listView.Columns.Add("Khoa", 250);
 
+            // --- 4. Tạo StatusStrip cho bộ đếm Nam/Nữ ---
+            statusStrip = new StatusStrip();
+            statusStrip.Font = new Font("Segoe UI", 9);
+            lblMaleCount = new ToolStripStatusLabel("Tổng SV Nam: 0");
+            lblFemaleCount = new ToolStripStatusLabel("Tổng SV Nữ: 0");
+
+            // Thêm Spacer hoặc căn chỉnh nếu thích, ở đây chỉ add đơn giản
+            statusStrip.Items.AddRange(new ToolStripItem[] { lblMaleCount, new ToolStripSeparator(), lblFemaleCount });
+
+
             // --- Add controls ---
             this.Controls.Add(listView);
+            this.Controls.Add(statusStrip); // Add StatusStrip
             this.Controls.Add(toolStrip);
             this.Controls.Add(menuStrip);
             this.MainMenuStrip = menuStrip;
@@ -95,7 +110,7 @@ namespace LAB03_03
 
             // Tạo sinh viên 3: Trung bình
             ReceiveStudentData("3333333333", "Lê Hoàng Nam", "Nam", 6.5f, "Công nghệ ô tô");
-            
+
             // --- THÊM DỮ LIỆU MẪU PHONG PHÚ HƠN ---
             ReceiveStudentData("1029384756", "Phạm Minh Tuấn", "Nam", 7.2f, "Quản trị kinh doanh");
             ReceiveStudentData("9876543210", "Hoàng Thị Lan", "Nữ", 5.8f, "Kế toán");
@@ -116,6 +131,22 @@ namespace LAB03_03
             AddStudentForm frm = new AddStudentForm();
             frm.OnAddStudent = this.ReceiveStudentData;
             frm.ShowDialog();
+        }
+
+        // --- HÀM CẬP NHẬT SỐ LƯỢNG SINH VIÊN ---
+        private void UpdateStudentCounts()
+        {
+            int maleCount = 0;
+            int femaleCount = 0;
+
+            foreach (ListViewItem item in listView.Items)
+            {
+                if (item.SubItems[3].Text == "Nam") maleCount++;
+                else if (item.SubItems[3].Text == "Nữ") femaleCount++;
+            }
+
+            lblMaleCount.Text = $"Tổng SV Nam: {maleCount}";
+            lblFemaleCount.Text = $"Tổng SV Nữ: {femaleCount}";
         }
 
         // --- HÀM NHẬN DỮ LIỆU (Được tái sử dụng để thêm data mẫu) ---
@@ -159,6 +190,9 @@ namespace LAB03_03
                 // Chỉ hiện thông báo khi Form đã hiển thị
                 if (this.Visible) MessageBox.Show("Thêm mới dữ liệu thành công!", "Thông báo");
             }
+
+            // Cập nhật số lượng
+            UpdateStudentCounts();
         }
 
         // --- Chức năng Tìm kiếm ---
