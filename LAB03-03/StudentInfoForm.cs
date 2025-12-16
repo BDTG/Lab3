@@ -44,9 +44,13 @@ namespace LAB03_03
             ToolStripMenuItem addItem = new ToolStripMenuItem("Thêm sinh viên", null, AddItem_Click);
             addItem.ShortcutKeys = Keys.Control | Keys.N;
 
+            ToolStripMenuItem deleteItem = new ToolStripMenuItem("Xóa", null, DeleteItem_Click);
+            deleteItem.ShortcutKeys = Keys.Control | Keys.D;
+
             ToolStripMenuItem exitItem = new ToolStripMenuItem("Thoát", null, ExitItem_Click);
 
             funcMenu.DropDownItems.Add(addItem);
+            funcMenu.DropDownItems.Add(deleteItem); // Thêm menu Xóa
             funcMenu.DropDownItems.Add(exitItem);
             menuStrip.Items.Add(funcMenu);
 
@@ -59,11 +63,15 @@ namespace LAB03_03
             txtSearch.Font = new Font("Segoe UI", 10);
             txtSearch.TextChanged += TxtSearch_TextChanged;
 
+            ToolStripButton btnDelete = new ToolStripButton("Xóa", SystemIcons.Error.ToBitmap(), DeleteItem_Click);
+            btnDelete.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+
             btnStats = new ToolStripButton("Thống kê Xếp loại", null, BtnStats_Click);
             btnStats.Image = SystemIcons.Information.ToBitmap();
             btnStats.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
 
-            toolStrip.Items.AddRange(new ToolStripItem[] { lblSearch, txtSearch, new ToolStripSeparator(), btnStats });
+            // Thêm nút Xóa vào Toolbar luôn cho tiện
+            toolStrip.Items.AddRange(new ToolStripItem[] { lblSearch, txtSearch, new ToolStripSeparator(), btnDelete, new ToolStripSeparator(), btnStats });
 
             // --- 3. Tạo ListView ---
             listView = new ListView();
@@ -131,6 +139,29 @@ namespace LAB03_03
             AddStudentForm frm = new AddStudentForm();
             frm.OnAddStudent = this.ReceiveStudentData;
             frm.ShowDialog();
+        }
+
+        // --- Xử lý sự kiện Xóa ---
+        private void DeleteItem_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                DialogResult dr = MessageBox.Show("Bạn có chắc muốn xóa sinh viên đã chọn?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Yes)
+                {
+                    // Xóa các dòng đang chọn
+                    foreach (ListViewItem item in listView.SelectedItems)
+                    {
+                        listView.Items.Remove(item);
+                    }
+                    UpdateStudentCounts(); // Cập nhật lại số lượng
+                    MessageBox.Show("Xóa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn sinh viên cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         // --- HÀM CẬP NHẬT SỐ LƯỢNG SINH VIÊN ---
